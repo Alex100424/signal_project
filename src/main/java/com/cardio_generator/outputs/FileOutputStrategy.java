@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.concurrent.ConcurrentHashMap;
 
+// Changed class name to FileOutputStrategy
 public class FileOutputStrategy implements OutputStrategy {
 
     private String BaseDirectory;
