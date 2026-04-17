@@ -7,6 +7,10 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Output strategy that writes generated data to files.
+ * A separate file is created for each label.
+ */
 // Changed class name to FileOutputStrategy
 public class FileOutputStrategy implements OutputStrategy {
 
@@ -19,6 +23,14 @@ public class FileOutputStrategy implements OutputStrategy {
         this.BaseDirectory = baseDirectory;
     }
 
+    /**
+     * Writes one generated record to its correct file.
+     * 
+     * @param patientId ID of the patient
+     * @param timestamp the time when the data was generated
+     * @param lavel the type of data
+     * @param data the generated value
+     */
     @Override
     public void output(int patientId, long timestamp, String label, String data) {
         try {
