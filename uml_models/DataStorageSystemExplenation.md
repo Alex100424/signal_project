@@ -1,4 +1,5 @@
 # Data Storage System
+
 The diagram models the data storage subsystem of the CHMS. Its purpose is to store incoming patient data safely and make it 
 accessible later on for monitoring and analysis. In my diagram, 'DataStorage' is the main class, it is responsible for storing 
 'PatientData', retrieving records for a specific patient and deleting records that are no longer usefull. Each 'PatientData' object

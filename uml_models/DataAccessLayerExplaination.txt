@@ -1,8 +1,0 @@
-Data Access Layer
-
-This layer connects the external simulator to the CHMS. DataListener is the common interface for receiving raw data, 
-while TCPDataListener, WebSocketDataListener, and FileDataListener handle different input sources. 
-This makes the rest of the system independent of how data arrives. DataParser then converts raw formats such as JSON or CSV
-into a standard internal object, ParsedData. DataSourceAdapter coordinates the process: it gets raw input from a listener, 
-sends it to DataParser, and forwards the parsed result to the next layer of the system. In your diagram, this layer correctly stops
-at ParsedData and the adapter, so DataStorage should not be included here if you want to keep the layer focused only on access and parsing.

@@ -1,4 +1,5 @@
 # Alert Generation System
+
 This diagram models the alert generation of the CHMS. Its purpose is to generate alerts when the data of a patient comes back with a 
 measurment outside an acceptable threshold. The main class in my design is 'AlertGenerator' and its responsability is coordinating
 the process. It recieves patient data and it uses 'ConditionEvaluator' to check weather the data violates any rules. The 
