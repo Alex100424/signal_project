@@ -14,6 +14,7 @@ import com.alerts.AlertGenerator;
  */
 public class DataStorage {
     private Map<Integer, Patient> patientMap; // Stores patient objects indexed by their unique patient ID.
+    private static DataStorage instance;
 
     /**
      * Constructs a new instance of DataStorage, initializing the underlying storage
@@ -21,6 +22,15 @@ public class DataStorage {
      */
     public DataStorage() {
         this.patientMap = new HashMap<>();
+    }
+
+    /**
+     * Returns the single shared DataStorage instance
+     * @return shared DataStorage instance
+     */
+    public static DataStorage getInstance() {
+        if (instance == null) instance = new DataStorage();
+        return instance;
     }
 
     /**
@@ -83,20 +93,17 @@ public class DataStorage {
      * @param args command line arguments
      */
     public static void main(String[] args) {
-        
+
         DataStorage storage = new DataStorage();
 
         // Assuming the reader has been properly initialized and can read data into the
         // storage
-        try
-        {
+        try {
             DataReader reader = new FileDataReader("output");
             reader.readData(storage);
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             System.err.println("Couldn't read from directory");
         }
-        
 
         // Example of using DataStorage to retrieve and print records for a patient
         List<PatientRecord> records = storage.getRecords(1, 1700000000000L, 1800000000000L);

@@ -26,7 +26,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 /**
- * This class is the entry point of the application. It parses command-line arguments,
+ * This class is the entry point of the application. It parses command-line
+ * arguments,
  * configures the output destination, creates patient IDs and schedules for
  * several generators.
  */
@@ -36,6 +37,16 @@ public class HealthDataSimulator {
     private static ScheduledExecutorService scheduler;
     private static OutputStrategy outputStrategy = new ConsoleOutputStrategy(); // Default output strategy
     private static final Random random = new Random();
+    private static HealthDataSimulator instance;
+
+    /**
+     * Returns the single shared HealthDataSimulator instance
+     * @return shared HealthDataSimulator instance
+     */
+    public static HealthDataSimulator getInstance() {
+        if (instance == null) instance = new HealthDataSimulator();
+        return instance;
+    }
 
     /**
      * Starts the simulator.
@@ -57,8 +68,10 @@ public class HealthDataSimulator {
 
     /**
      * Parses command-line arguments and updates simulator
+     * 
      * @param args command-line arguments
-     * @throws IOException if file output is selected and target directory can't be created
+     * @throws IOException if file output is selected and target directory can't be
+     *                     created
      */
     private static void parseArguments(String[] args) throws IOException {
         for (int i = 0; i < args.length; i++) {
@@ -182,8 +195,9 @@ public class HealthDataSimulator {
      * Schedules a task with a random initial delay.
      * The initial delay is between 0 and 4 time units, this reduces the chance
      * for all the tasks to start at the same time.
-     * @param task the task to execute
-     * @param period the time period between executions
+     * 
+     * @param task     the task to execute
+     * @param period   the time period between executions
      * @param timeUnit the time unit used
      */
     private static void scheduleTask(Runnable task, long period, TimeUnit timeUnit) {

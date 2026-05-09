@@ -25,7 +25,7 @@ public class ManualAlertStrategy implements AlertStrategy {
         List<PatientRecord> alertRecords = new ArrayList<>();
         for(PatientRecord record : records)
         {
-            if(record.getRecordType().equals("Manual Triggered Alert"))
+            if(record.getRecordType().equals("Alert"))
                 alertRecords.add(record);
         }
         alertRecords.sort(Comparator.comparingLong(PatientRecord::getTimestamp));
