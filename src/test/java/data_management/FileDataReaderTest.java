@@ -6,7 +6,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import com.data_management.*;
 
+/**
+ * Unit test for the FileDataReader class
+ */
 class FileDataReaderTest {
+
+    /**
+     * Tests that the data is correctly read from a simulator output file
+     * 
+     * @throws Exception if the temp file can't be created or read
+     */
     @Test
     void testReadData() throws Exception
     {

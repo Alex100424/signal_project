@@ -5,6 +5,9 @@ import java.util.*;
 import com.data_management.*;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Unit test for the Patient class
+ */
 class PatientTest {
     //Tests that getRecords returns only the records in the provided time frame
     @Test

@@ -8,8 +8,14 @@ import com.data_management.PatientRecord;
 
 import java.util.List;
 
+/**
+ * Unit test for the DataStorage class
+ */
 class DataStorageTest {
 
+    /**
+     * Tests the patient records can be added and retrieved by time range
+     */
     @Test
     void testAddAndGetRecords() {
         // TODO Perhaps you can implement a mock data reader to mock the test data?
