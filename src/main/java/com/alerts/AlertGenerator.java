@@ -7,6 +7,8 @@ import java.util.List;
 import com.data_management.DataStorage;
 import com.data_management.Patient;
 import com.data_management.PatientRecord;
+import com.alerts.factories.*;
+import com.alerts.strategies.*;
 
 /**
  * The {@code AlertGenerator} class is responsible for monitoring patient data
@@ -17,6 +19,11 @@ import com.data_management.PatientRecord;
 public class AlertGenerator {
     private DataStorage dataStorage;
     private List<Alert> alerts;
+    private BloodPressureAlertFactory bloodPressureAlertFactory;
+    private BloodOxygenAlertFactory bloodOxygenAlertFactory;
+    private ECGAlertFactory ecgAlertFactory;
+    private ManualAlertFactory manualAlertFactory;
+    private List<AlertStrategy> strategies;
 
     /**
      * Constructs an {@code AlertGenerator} with a specified {@code DataStorage}.
@@ -29,6 +36,15 @@ public class AlertGenerator {
     public AlertGenerator(DataStorage dataStorage) {
         this.dataStorage = dataStorage;
         this.alerts = new ArrayList<>();
+        this.bloodPressureAlertFactory = new BloodPressureAlertFactory();
+        this.bloodOxygenAlertFactory = new BloodOxygenAlertFactory();
+        this.ecgAlertFactory = new ECGAlertFactory();
+        this.manualAlertFactory = new ManualAlertFactory();
+        this.strategies = new ArrayList<>();
+        strategies.add(new BloodPressureStrategy());
+        strategies.add(new OxygenSaturationStrategy());
+        strategies.add(new ECGStrategy());
+        strategies.add(new ManualAlertStrategy());
     }
 
     /**
@@ -91,6 +107,9 @@ public class AlertGenerator {
         checkEcgAlerts(patient);
         checkTriggeredAlerts(patient);
 
+        for(AlertStrategy strategy : strategies)
+            strategy.checkAlert(patient, alerts);
+
     }
 
     /**
@@ -126,8 +145,8 @@ public class AlertGenerator {
             double value = record.getMeasurementValue();
 
             if (value > max || value < min) {
-                Alert alert = new Alert(String.valueOf(record.getPatientId()), "Critical " + type,
-                        record.getTimestamp());
+                Alert alert = bloodPressureAlertFactory.createAlert(String.valueOf(record.getPatientId()), 
+                "Critical " + type, record.getTimestamp());
 
                 triggerAlert(alert);
             }
@@ -156,14 +175,14 @@ public class AlertGenerator {
             boolean decreasingTrend = (change1 < -10) && (change2 < -10);
 
             if (increasingTrend) {
-                Alert alert = new Alert(String.valueOf(records.get(i).getPatientId()),
-                        "Increasing " + type + " Trend", records.get(i).getTimestamp());
+                Alert alert = bloodPressureAlertFactory.createAlert(String.valueOf(records.get(i).getPatientId()), 
+                "Increasing " + type + " Trend", records.get(i).getTimestamp());
                 triggerAlert(alert);
             }
 
             if (decreasingTrend) {
-                Alert alert = new Alert(String.valueOf(records.get(i).getPatientId()),
-                        "Decreasing " + type + " Trend", records.get(i).getTimestamp());
+                Alert alert = bloodPressureAlertFactory.createAlert(String.valueOf(records.get(i).getPatientId()), 
+                "Decreasing " + type + " Trend", records.get(i).getTimestamp());
                 triggerAlert(alert);
             }
         }
@@ -189,7 +208,8 @@ public class AlertGenerator {
     private void checkLowSaturation(List<PatientRecord> records) {
         for (PatientRecord record : records) {
             if (record.getMeasurementValue() < 92) {
-                Alert alert = new Alert(String.valueOf(record.getPatientId()), "Low Saturation", record.getTimestamp());
+                Alert alert = bloodOxygenAlertFactory.createAlert(String.valueOf(record.getPatientId()),
+                 "Low Saturation", record.getTimestamp());
                 triggerAlert(alert);
             }
         }
@@ -211,8 +231,8 @@ public class AlertGenerator {
             double timeDifference = curr.getTimestamp() - prev.getTimestamp();
 
             if (drop >= 5 && timeDifference <= timeInterval) {
-                Alert alert = new Alert(String.valueOf(curr.getPatientId()), "Rapid Saturation Drop",
-                        curr.getTimestamp());
+                Alert alert = bloodOxygenAlertFactory.createAlert(String.valueOf(curr.getPatientId()),
+                 "Rapid Saturation Drop", curr.getTimestamp());
                 triggerAlert(alert);
             }
         }
@@ -239,7 +259,8 @@ public class AlertGenerator {
         if (lowBloodPressure && lowSaturation) {
             long alertTime = Math.max(systolic.getTimestamp(), saturation.getTimestamp());
 
-            Alert alert = new Alert(String.valueOf(systolic.getPatientId()), "Hypotensive Hypoxemia Alert", alertTime);
+            Alert alert = bloodOxygenAlertFactory.createAlert(String.valueOf(systolic.getPatientId()), 
+            "Hypotensive Hypoxemia Alert", alertTime);
             triggerAlert(alert);
         }
     }
@@ -265,8 +286,8 @@ public class AlertGenerator {
             double currentVal = ecgRecords.get(i).getMeasurementValue();
 
             if (currentVal > avg * 2) {
-                Alert alert = new Alert(String.valueOf(ecgRecords.get(i).getPatientId()), "Abnormal ECG Peak",
-                        ecgRecords.get(i).getTimestamp());
+                Alert alert = ecgAlertFactory.createAlert(String.valueOf(ecgRecords.get(i).getPatientId()), 
+                "Abnormal ECG Peak", ecgRecords.get(i).getTimestamp());
                 triggerAlert(alert);
             }
         }
@@ -282,10 +303,8 @@ public class AlertGenerator {
 
         for (PatientRecord record : alertRecords) {
             if (record.getMeasurementValue() == 1.0) { // triggered = 1, resolved = 0
-                Alert alert = new Alert(
-                        String.valueOf(record.getPatientId()),
-                        "Manual Triggered Alert",
-                        record.getTimestamp());
+                Alert alert = manualAlertFactory.createAlert(String.valueOf(record.getPatientId()), 
+                "Manual Triggered Alert", record.getTimestamp());
 
                 triggerAlert(alert);
             }
