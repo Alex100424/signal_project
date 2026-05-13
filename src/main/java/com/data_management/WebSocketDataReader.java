@@ -76,7 +76,7 @@ public class WebSocketDataReader implements DataReader {
     /**
      * Parses one message and saves it
      */
-    private void saveMessage(String message, DataStorage dataStorage)
+    public void saveMessage(String message, DataStorage dataStorage)
     {
         String[] parts = message.split(",");
         int patientId = Integer.parseInt(parts[0].trim());

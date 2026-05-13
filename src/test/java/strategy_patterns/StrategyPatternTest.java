@@ -126,7 +126,6 @@ class StrategyPatternTest {
         new ManualAlertStrategy().checkAlert(patient, alerts);
         assertTrue(hasAlert(alerts, "Manual Triggered Alert"));
     }
-
     /**
      * Method that checks if a list of alerts has a condition
      *
