@@ -1,7 +1,7 @@
 package com.data_management;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
 import java.util.Map;
 import com.alerts.AlertGenerator;
@@ -21,7 +21,7 @@ public class DataStorage {
      * structure.
      */
     public DataStorage() {
-        this.patientMap = new HashMap<>();
+        this.patientMap = new ConcurrentHashMap<>();
     }
 
     /**
